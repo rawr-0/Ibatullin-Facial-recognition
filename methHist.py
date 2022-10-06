@@ -33,7 +33,10 @@ def HistA():
                     break
         print((colv/col)*100)
         a.append(((colv/col)*100))
-    plt.plot(a,"red")
+    fig, ax = plt.subplots()
+    ax.plot(a, "red")
+    ax.set_xlabel("количество наборов")
+    ax.set_ylabel("точность")
     plt.show()
     print((colv/col) * 100)
 

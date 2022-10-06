@@ -10,13 +10,15 @@ def fft(img):
     return absolute
 
 
-def FourierA():
+def FourierA(size):
     colv = 0
     col = 0
     a = []
     for i in range(1, 41):
         img1 = cv.imread(f"dataset/s{i}/1.pgm", 0)
+        img1 = cv.resize(img1,(size,size),interpolation=cv.INTER_AREA)
         img2 = cv.imread(f"dataset/s{i}/2.pgm", 0)
+        img2 = cv.resize(img2, (size, size), interpolation=cv.INTER_AREA)
         #img1 = img1[31:82, 21:72]
         #img2 = img2[31:82, 21:72]
         m = Fourier(img1,img2)
@@ -27,6 +29,7 @@ def FourierA():
             if o != i:
                 for j in range(1, 11):
                     img3 = cv.imread(f"dataset/s{o}/{j}.pgm", 0)
+                    img3 = cv.resize(img3, (size, size), interpolation=cv.INTER_AREA)
                     #img3 = img3[31:82, 21:72]
                     q = Fourier(img1, img3)
                     if m < q:
@@ -36,9 +39,12 @@ def FourierA():
                 if t:
                     break
         a.append(((colv / col) * 100))
-        print((colv/col)*100)
-    plt.plot(a, "red")
-    plt.show()
+    return (colv/col)*100
+    # fig, ax = plt.subplots()
+    # ax.plot(a, "red")
+    # ax.set_xlabel("количество наборов")
+    # ax.set_ylabel("точность")
+    # plt.show()
 
 
 def Fourier(img1,img2):

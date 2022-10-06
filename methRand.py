@@ -27,11 +27,14 @@ def randpixA(numpix):
                         break
                 if t:
                     break
-        print((colv/col)*100)
+        #print((colv/col)*100)
         a.append(((colv/col)*100))
-    plt.plot(a,"red")
-    plt.show()
-    print((colv/col) * 100)
+    #fig, ax = plt.subplots()
+    #ax.plot(a,"red")
+    #ax.set_xlabel("количество наборов")
+    #ax.set_ylabel("точность")
+    #plt.show()
+    return (colv/col) *100
 
 
 def make_arr(img1,num_pix):
