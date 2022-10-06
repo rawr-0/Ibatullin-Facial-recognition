@@ -4,7 +4,12 @@ import methRand
 import methFourier
 from matplotlib import pyplot as plt
 
+
+# точность
 # quality.qual()
+
+
+# случайные пиксели
 # s = 0
 # a = []
 # i = 1
@@ -17,6 +22,7 @@ from matplotlib import pyplot as plt
 # print(s)
 
 
+# двумерное преобразование фурье
 # s = 0
 # a = []
 # i = 100
@@ -30,10 +36,13 @@ from matplotlib import pyplot as plt
 # print(s)
 
 
+# график
 # fig, ax = plt.subplots()
 # ax.plot(a, "red")
 # ax.set_xlabel("количество наборов")
 # ax.set_ylabel("точность")
 # plt.show()
 
+
+# гистогрма
 methHist.HistA()
