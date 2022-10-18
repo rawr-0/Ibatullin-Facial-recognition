@@ -2,11 +2,14 @@ import quality
 import methHist
 import methRand
 import methFourier
+import vote
 from matplotlib import pyplot as plt
+
 
 
 # точность
 # quality.qual()
+
 
 
 # случайные пиксели
@@ -45,4 +48,6 @@ from matplotlib import pyplot as plt
 
 
 # гистогрма
-methHist.HistA()
+#methHist.HistA()
+
+vote.vote(100)
