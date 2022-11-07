@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 def fft(img):
@@ -12,6 +13,8 @@ def fft(img):
 def qual():
     ref = cv.imread("dataset/s1/1.pgm",0)
     ref = ref[40:95,17:75]
+    plt.imshow(ref,cmap='gray')
+    plt.show()
     ref = fft(ref)
     mav = 0
     for i in range(1,41):

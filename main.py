@@ -5,39 +5,20 @@ import methFourier
 import vote
 from matplotlib import pyplot as plt
 
+#красивое письмо
+#точность
+#quality.qual()
 
 
-# точность
-# quality.qual()
-
-
-
-# случайные пиксели
+#случайные пиксели
 # s = 0
 # a = []
 # i = 1
 # while i < 1101:
-#     u = methRand.randpixA(i)
-#     s = max(s,u)
-#     a.append(u)
-#     i+=100
-#
-# print(s)
-
-
-# двумерное преобразование фурье
-# s = 0
-# a = []
-# i = 100
-# while i < 1101:
-#     u = methFourier.FourierA(i)
-#     print(u)
-#     s = max(s,u)
-#     a.append(u)
-#     i+=100
-#
-# print(s)
-
+print(methRand.randpixA(500))
+    # s = max(s,u)
+    # a.append(u)
+    # i+=100
 
 # график
 # fig, ax = plt.subplots()
@@ -46,8 +27,20 @@ from matplotlib import pyplot as plt
 # ax.set_ylabel("точность")
 # plt.show()
 
+print(methHist.HistA())
+##двумерное преобразование фурье
+# s = 0
+# a = []
+# i = 100
+# while i < 1101:
+u = methFourier.FourierA(112)
+print(u)
+#     s = max(s,u)
+#     a.append(u)
+#     i+=100
+#
+# print(s)
 
-# гистогрма
-#methHist.HistA()
+# гистограмма
 
-vote.vote(100)
+print(vote.vote(100))
