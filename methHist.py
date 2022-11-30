@@ -1,14 +1,12 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
-import matplotlib
 import numpy as np
-from matplotlib import animation
-matplotlib.use('TkAgg')
+from matplotlib.animation import ArtistAnimation
 
 
 def make_hist(img):
-    st = cv.calcHist([img],[0],None,[256],[0,256],accumulate=False)
-    #st = cv.normalize(st,st,0,1,cv.NORM_MINMAX)
+    st = cv.calcHist([img],[0],None,[32],[0,256],accumulate=True)
+    st = cv.normalize(st,st,0,1,cv.NORM_MINMAX)
     return st
 
 def HistA():
@@ -19,15 +17,30 @@ def HistA():
     ims = []
     ims2 = []
     ims3 = []
-    fig, ax = plt.subplots(2, 2)
+    ims4 = []
+    fig, ax = plt.subplots(3, 2)
+    fig.delaxes(ax[2][1])
+    ax[0][0].title.set_text("эталон")
+    ax[0][1].title.set_text("ответ программы")
+    ax[1][0].title.set_text("гистограмма эталона")
+    ax[1][1].title.set_text("гистограмма ответа")
+    ax[2][0].title.set_text("график точности")
+    ax[1][0].set_xlabel("столбцы")
+    ax[1][1].set_xlabel("столбцы")
+    ax[2][0].set_xlabel("количество тестов")
+    ax[2][0].set_ylabel("точность %")
+
     for i in range(1,41):
         m = 0
         img1 = cv.imread(f"dataset/s{i}/1.pgm",0)
-        for o in range(2,11):
-            img2 = cv.imread(f"dataset/s{i}/2.pgm",0)
-            q = hist(img1,img2)
-            if q > m:
-                m = q
+        #ref = cv.imread(f"dataset/s{i}/2.pgm",0)
+        for o in range(2, 11):
+            img2 = cv.imread(f"dataset/s{i}/{o}.pgm", 0)
+            q1 = hist(img1,img2)
+            #q2 = hist(ref,img2)
+            #q1 = max(q1,q2)
+            if q1 > m:
+                m = q1
                 imgout = img2
         col+=1
         colv+=1
@@ -35,9 +48,11 @@ def HistA():
         for o in range(1,41):
             if o != i:
                 for j in range(1,11):
-                    img3 = cv.imread(f"dataset/s{o}/{j}.pgm",0)
-                    q = hist(img1,img3)
-                    if m < q:
+                    img3 = cv.imread(f"dataset/s{o}/{j}.pgm", 0)
+                    q1 = hist(img1, img3)
+                    #q2 = hist(ref, img3)
+                    #q1 = max(q1, q2)
+                    if m < q1:
                         colv -= 1
                         t = True
                         imgout = img3
@@ -49,12 +64,16 @@ def HistA():
                     ])
         ims2.append(ax[1][0].plot(make_hist(img1)))
         ims3.append(ax[1][1].plot(make_hist(imgout)))
-        a.append(((colv / col) * 100))
-    ani = animation.ArtistAnimation(fig, ims, blit=True, interval=1000, repeat=True)
-    ani2 = animation.ArtistAnimation(fig, ims2, blit=True, interval=1000, repeat=True)
-    ani3 = animation.ArtistAnimation(fig, ims3, blit=True, interval=1000, repeat=True)
+        a.append((colv / col) * 100)
+        ims4.append(ax[2][0].plot(a,'r'))
+    ani = ArtistAnimation(fig, ims, blit=True, interval=1000, repeat=True)
+    ani2 = ArtistAnimation(fig, ims2, blit=True, interval=1000, repeat=True)
+    ani3 = ArtistAnimation(fig, ims3, blit=True, interval=1000, repeat=True)
+    #ani4 = ArtistAnimation(fig, ims4, blit=True, interval=1000, repeat=True)
     plt.show()
     return (colv/col) * 100
+
+
 def hist(img1,img2):
     hist_base = make_hist(img1)
     sum = 0.

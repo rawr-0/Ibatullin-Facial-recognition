@@ -1,14 +1,17 @@
+import cmath
+import math
+
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib import animation
+from matplotlib.animation import ArtistAnimation
 
 
 def fft(img):
     fft = np.fft.fft2(img)
     fft_shift = np.fft.fftshift(fft)
     absolute = (np.log(np.abs(fft_shift)+1)*10).astype(np.float)
-    return absolute
+    return fft_shift
 
 
 def FourierA(size):
@@ -17,13 +20,23 @@ def FourierA(size):
     a = []
     imgout = None
     ims = []
-    fig, ax = plt.subplots(2, 2)
+    ims4 = []
+    fig, ax = plt.subplots(3, 2)
+    fig.delaxes(ax[2][1])
+    ax[0][0].title.set_text("эталон")
+    ax[0][1].title.set_text("ответ программы")
+    ax[1][0].title.set_text("преобразование Фурье эталона")
+    ax[1][1].title.set_text("преобразование Фурье  ответа")
+    ax[2][0].title.set_text("график точности")
+    ax[2][0].set_xlabel("количество тестов")
+    ax[2][0].set_ylabel("точность %")
+
     for i in range(1, 41):
         img1 = cv.imread(f"dataset/s{i}/1.pgm", 0)
         #img1 = cv.resize(img1,(size,size),interpolation=cv.INTER_AREA)
         m = 0
         for o in range(2,11):
-            img2 = cv.imread(f"dataset/s{i}/2.pgm", 0)
+            img2 = cv.imread(f"dataset/s{i}/{o}.pgm", 0)
             #img2 = cv.resize(img2, (size, size), interpolation=cv.INTER_AREA)
             q = Fourier(img1, img2)
             if q > m:
@@ -50,29 +63,24 @@ def FourierA(size):
                     break
         ims.append([ax[0][0].imshow(img1, animated=True, cmap='gray'),
                     ax[0][1].imshow(imgout, animated=True, cmap='gray'),
-                    ax[1][0].imshow(fft(img1), animated=True, cmap='gray'),
-                    ax[1][1].imshow(fft(imgout), animated=True, cmap='gray')])
-        a.append(((colv / col) * 100))
-    ani = animation.ArtistAnimation(fig, ims, blit=True, interval=1000, repeat=True)
+                    ax[1][0].imshow((np.log(np.abs(fft(img1)+1)*10).astype(np.float)), animated=True, cmap='gray'),
+                    ax[1][1].imshow((np.log(np.abs(fft(imgout)+1)*10).astype(np.float)), animated=True, cmap='gray')])
+        a.append((colv / col) * 100)
+        ims4.append(ax[2][0].plot(a, 'r'))
+    ani = ArtistAnimation(fig, ims, blit=True, interval=1000, repeat=True)
+    #ani2 = ArtistAnimation(fig, ims4, blit=True , interval=1000, repeat=True)
     plt.show()
+    plt.close()
     return (colv/col)*100
 
-    # plt.show()
 
-
-def Fourier(img1,img2):
+def Fourier(img1, img2):
     img1 = fft(img1)
     rows, cols = img1.shape
     img2 = fft(img2)
     sm = 0.
-    for i in range(rows):
-        for j in range(cols):
-            k1 = min(int(img2[i][j]), int(img1[i][j]))
-            k2 = max(int(img2[i][j]), int(img1[i][j]))
-            if k1 == 0:
-                k1 += 1
-            if k2 == 0:
-                k2 += 1
-            sm += (k1 / 255 * 100) / (k2 / 255 * 100)
-    mav = sm / (rows * cols)
+    for i in range(int(rows/3),int(rows-rows/3)):
+        for j in range(int(cols/3),int(cols-cols/3)):
+            sm += pow(img2[i][j].real-img1[i][j].real, 2)+pow(img2[i][j].imag-img1[i][j].imag, 2)
+    mav = (rows * cols)/sm
     return mav * 100
